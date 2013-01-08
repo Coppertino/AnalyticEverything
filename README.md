@@ -6,7 +6,7 @@ Cocoa Wrapper for Google Analytics Measurement Protocol
 
 ## Overview
 
-Google analytics is powerfull tool to mesure audience, analyze perfomance and sources. 
+Google analytics is powerfull tool to measure audience, analyze perfomance and sources. 
 
 When **iOS** (*iPhoneOS*) out, google announces mobile version for Google Analytics, but no desktop.
 
@@ -16,12 +16,17 @@ Now, Google announce new [Measurement Protocol](https://developers.google.com/an
 
 Now, it's static library that could be used as library or simple drop in files. 
 
-GATracking - library, protocol implementation
-GoogleAnalyticsSample - Example how it could be used
+* `GATracking` - library, protocol implementation
+* `GoogleAnalyticsSample` - Example how it could be used
+
+Current library is under deep development and not ready for production ussage. Most part not works properly. 
 
 
-## [Before use this you have request beta acces for your GA Property](https://services.google.com/fb/forms/analyticspreview/)
--
+
+> Note: The Measurement Protocol is part of Universal Analytics, which is currently available as a developer preview in limited beta. If you're interested in signing up, please [request access to the beta.](https://services.google.com/fb/forms/analyticspreview/)
+
+
+
 
 
 
