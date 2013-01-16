@@ -16,9 +16,12 @@
 {
     // Insert code here to initialize your application
     GATracking *tracking = [GATracking trackerWithID:@"UA-000000-XX"]; /// <---------- YOUR ID here
-    [tracking trackHit:[GAGeneralEvent screenViewWithName:@"MainView"]];
-    [tracking trackHit:[GAGeneralEvent trackAppEventWithName:@"Window" inEventCategory:@"states" forAction:@"load" withValue:NULL]];
-    [tracking performSelector:@selector(forcePush)];
+    [tracking sendView:@"MainView"];
+    [tracking sendEventWithCategory:@"States" withAction:@"Load" withLabel:@"Screen load" withValue:@(100)];
+    
+    [self.window.contentView setWantsLayer:YES];
+    
+    [[self.window.contentView layer] setBackgroundColor:[[NSColor selectedMenuItemColor] CGColor]];
     
     
 }

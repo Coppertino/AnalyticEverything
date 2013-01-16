@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07538B5616A72079004905F4 /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07538B5516A72079004905F4 /* ExceptionHandling.framework */; };
 		078CE929169C292100073C19 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 078CE928169C292100073C19 /* SystemConfiguration.framework */; };
 		078CE92B169C292500073C19 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 078CE92A169C292500073C19 /* WebKit.framework */; };
 		078CE92C169C2C1500073C19 /* libGATracking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 078CE926169C290C00073C19 /* libGATracking.a */; };
+		078CE9CA169C9C5A00073C19 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 078CE9C9169C9C5A00073C19 /* libPods.a */; };
 		078D42611682085500F07F8C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 078D42601682085500F07F8C /* Cocoa.framework */; };
 		078D426B1682085500F07F8C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 078D42691682085500F07F8C /* InfoPlist.strings */; };
 		078D426D1682085500F07F8C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 078D426C1682085500F07F8C /* main.m */; };
@@ -19,9 +21,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		07538B5516A72079004905F4 /* ExceptionHandling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExceptionHandling.framework; path = System/Library/Frameworks/ExceptionHandling.framework; sourceTree = SDKROOT; };
 		078CE926169C290C00073C19 /* libGATracking.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGATracking.a; path = ../../../../Library/Developer/Xcode/DerivedData/Build/Products/Debug/libGATracking.a; sourceTree = "<group>"; };
 		078CE928169C292100073C19 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		078CE92A169C292500073C19 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		078CE9C9169C9C5A00073C19 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = ../../../../Library/Developer/Xcode/DerivedData/Build/Products/Debug/libPods.a; sourceTree = "<group>"; };
 		078D425C1682085500F07F8C /* GoogleAnalyticsSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GoogleAnalyticsSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		078D42601682085500F07F8C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		078D42631682085500F07F8C /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -42,7 +46,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07538B5616A72079004905F4 /* ExceptionHandling.framework in Frameworks */,
 				078CE92C169C2C1500073C19 /* libGATracking.a in Frameworks */,
+				078CE9CA169C9C5A00073C19 /* libPods.a in Frameworks */,
 				078D42611682085500F07F8C /* Cocoa.framework in Frameworks */,
 				078CE929169C292100073C19 /* SystemConfiguration.framework in Frameworks */,
 				078CE92B169C292500073C19 /* WebKit.framework in Frameworks */,
@@ -55,6 +61,7 @@
 		078D42511682085500F07F8C = {
 			isa = PBXGroup;
 			children = (
+				078CE9C9169C9C5A00073C19 /* libPods.a */,
 				078CE926169C290C00073C19 /* libGATracking.a */,
 				078D42661682085500F07F8C /* GoogleAnalyticsSample */,
 				078D425F1682085500F07F8C /* Frameworks */,
@@ -74,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				078D42601682085500F07F8C /* Cocoa.framework */,
+				07538B5516A72079004905F4 /* ExceptionHandling.framework */,
 				078D42621682085500F07F8C /* Other Frameworks */,
 			);
 			name = Frameworks;

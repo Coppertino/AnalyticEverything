@@ -38,7 +38,7 @@
     NSString *hitTypeString = @"pageview";
     switch (self.hitType) {
         case GAPageView:    hitTypeString = @"pageview"; break;
-        case GAAppView:     hitTypeString = @"appView"; break;
+        case GAAppView:     hitTypeString = @"appview"; break;
         case GAEvent:       hitTypeString = @"event"; break;
         case GATransaction: hitTypeString = @"transaction"; break;
         case GAItem:        hitTypeString = @"item"; break;

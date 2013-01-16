@@ -8,42 +8,46 @@
 
 #import "GATracking.h"
 #import "GAHit.h"
-
-#import <WebKit/WebKit.h>
+#import "GAGeneralEvent.h"
+#import "GASocialHit.h"
+#import "GAExceptionHit.h"
+#import <ExceptionHandling/ExceptionHandling.h>
 
 // Pods
 #import <AFNetworking/AFHTTPClient.h>
 #import <CocoaLumberjack/DDTTYLogger.h>
 #import <CocoaLumberjack/DDASLLogger.h>
+#import <libextobjc/extobjc.h>
+
 
 NSString *const kGAVersion = @"1";
 NSString *const kGAErrorDomain = @"com.google-analytics.errorDomain";
 NSString *const kGAReceiverURLString = @"http://www.google-analytics.com/collect";
 NSString *const kGASecureReceiverURLString = @"https://ssl.google-analytics.com/collect";
 NSString *const kGAUUIDKey = @"_googleAnalyticsUUID_";
+NSString *const kGASavedHitsKey = @"_googleAnalyticsOLDHits_";
 
 @interface GATracking (/*Private*/)
-@property (nonatomic) NSMutableOrderedSet *hits;
+@property (nonatomic) NSMutableArray *hits;
 @property (nonatomic) AFHTTPClient *httpClient;
-@property (nonatomic) NSUInteger queueSize;
+@property (nonatomic) NSTimer *timer;
 @property (nonatomic, copy, readwrite)  NSString *trackingId;
+@property (nonatomic) NSUInteger sessionCount;
+@property (nonatomic) BOOL terminating, sessionChanged;
 @end
 
 @implementation GATracking
 @synthesize clientId = _clientId;
 
-+ (void)initialize
-{
-    // Logging setup
-    [DDLog addLogger:[DDASLLogger sharedInstance]];
-    [DDLog addLogger:[DDTTYLogger sharedInstance]];
++ (GATracking *)sharedTracker {
+    static GATracking *_sharedTracker = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedTracker = [GATracking trackerWithID:kGATrackerID];
+        
+    });
     
-    [[DDTTYLogger sharedInstance] setForegroundColor:[NSColor greenColor] backgroundColor:nil forFlag:LOG_FLAG_INFO];
-    [[DDTTYLogger sharedInstance] setForegroundColor:[NSColor redColor] backgroundColor:nil forFlag:LOG_FLAG_ERROR];
-    [[DDTTYLogger sharedInstance] setForegroundColor:[NSColor blueColor] backgroundColor:nil forFlag:LOG_FLAG_VERBOSE];
-    [[DDTTYLogger sharedInstance] setForegroundColor:[NSColor orangeColor] backgroundColor:nil forFlag:LOG_FLAG_WARN];
-    
-    [[DDTTYLogger sharedInstance] setColorsEnabled:YES];
+    return _sharedTracker;
 }
 
 + (GATracking *)trackerWithID:(NSString *)trackingID;
@@ -51,6 +55,15 @@ NSString *const kGAUUIDKey = @"_googleAnalyticsUUID_";
     GATracking *tracker = [[self alloc] init];
     if (trackingID) {
         tracker.trackingId = trackingID;
+        tracker.trackUncaughtExceptions = YES;
+
+        // Restore prev hits
+        NSArray *prevHits = [[NSUserDefaults standardUserDefaults] objectForKey:kGASavedHitsKey];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kGASavedHitsKey];
+        if (prevHits && prevHits.count > 0) {
+            [tracker.hits addObjectsFromArray:prevHits];
+            [tracker dispatch];
+        }
     }
     
     return tracker;
@@ -59,20 +72,91 @@ NSString *const kGAUUIDKey = @"_googleAnalyticsUUID_";
 - (id)init {
     self = [super init];
     if (self) {
-        self.queueSize = 5;
-        self.hits = [NSMutableOrderedSet orderedSetWithCapacity:self.queueSize*2];
+        self.hits = [NSMutableArray array];
         self.httpClient = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:kGAReceiverURLString]];
+        self.dispatchInterval = 120;
+        
+#ifdef DEBUG
+        self.debug = YES;
+#endif
 
-        __weak __typeof(&*self) weakSelf = self;
-        [[NSNotificationCenter defaultCenter] addObserverForName:AFNetworkingReachabilityDidChangeNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-            DDLogInfo(@"Netwokr status changes: %@", note);
+        @weakify(self);
+        
+        // If there are appDelegate than we need to extends its functionality, otherwise set self as delegate
+
+        if ([NSApp delegate]) {
+            id appDelegate = [NSApp delegate];
+            NSApplicationTerminateReply (^AppTerminationBlock)(NSApplication *) = ^(NSApplication *app){
+                if (self.hits.count > 0) {
+                    self.terminating = YES;
+                    [self dispatch];
+                    return (NSApplicationTerminateReply)NSTerminateLater;
+                }
+                return (NSApplicationTerminateReply)NSTerminateNow;
+            };
             
+            ext_addBlockMethod([appDelegate class], @selector(applicationShouldTerminate:), AppTerminationBlock, ext_copyBlockTypeEncoding(AppTerminationBlock));
+            
+        } else {
+            [NSApp setDelegate:self];
+        }
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:AFNetworkingReachabilityDidChangeNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
             if ([[note.userInfo valueForKey:AFNetworkingReachabilityNotificationStatusItem] integerValue] > AFNetworkReachabilityStatusNotReachable)
-                [weakSelf pushHits];
+                @strongify(self);
+                [self logString:@"Reachability: %@", note];
+                [self dispatch];
         }];
-}
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:NSApplicationWillTerminateNotification object:NSApp queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+            @strongify(self);
+            [self logString:@"Application will terminate: %@", note];
+            NSMutableArray *saveHits = [NSMutableArray arrayWithCapacity:self.hits.count];
+            [self.hits enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                [saveHits addObject:[obj dictionaryRepresentation]];
+            }];
+            
+            
+            [NSApp replyToApplicationShouldTerminate:NO];
+            
+            [[NSUserDefaults standardUserDefaults] setObject:saveHits forKey:kGASavedHitsKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }];
+    }
     
     return self;
+}
+
+- (void)dealloc
+{
+    [self dispatch];
+}
+
+#pragma mark - Helpers
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender;
+{
+    return NSTerminateLater;
+}
+
+- (void)logString:(NSString *)format, ...;
+{
+    va_list args;
+	if (self.debug && format)
+	{
+		va_start(args, format);
+		
+		NSString *logMsg = [[NSString alloc] initWithFormat:format arguments:args];
+		DDLogInfo(logMsg);
+		
+		va_end(args);
+	}
+
+}
+
+- (void)dispatch:(NSTimer *)timer;
+{
+    [self logString:@"[%@] Fire events (size: %@)", [timer fireDate], @(self.hits.count)];
+    [self dispatch];
 }
 
 #pragma mark - Setter
@@ -89,9 +173,40 @@ NSString *const kGAUUIDKey = @"_googleAnalyticsUUID_";
 {
     _httpClient = httpClient;
     if (_httpClient) {
-        WebView *wv = [[WebView alloc] init];
-        [_httpClient setDefaultHeader:@"User-Agent" value:[wv userAgentForURL:_httpClient.baseURL]];
-        wv = nil;
+        NSDictionary *osInfo = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
+        
+        NSLocale *currentLocale = [NSLocale autoupdatingCurrentLocale];
+        NSString *UA = [NSString stringWithFormat:@"GoogleAnalytics/2.0 (Macintosh; Intel %@ %@; %@-%@)",
+                        osInfo[@"ProductName"], [osInfo[@"ProductVersion"] stringByReplacingOccurrencesOfString:@"." withString:@"_"],
+                        [currentLocale objectForKey:NSLocaleLanguageCode], [currentLocale objectForKey:NSLocaleCountryCode]];
+        
+        [_httpClient setDefaultHeader:@"User-Agent" value:UA];
+    }
+}
+
+- (void)setTrackUncaughtExceptions:(BOOL)trackUncaughtExceptions;
+{
+    _trackUncaughtExceptions = trackUncaughtExceptions;
+    
+    if (trackUncaughtExceptions) {
+        [[NSExceptionHandler defaultExceptionHandler] setDelegate:self];
+        [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask: NSLogAndHandleEveryExceptionMask];
+    } else {
+        [[NSExceptionHandler defaultExceptionHandler] setDelegate:nil];
+        [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask: 0];
+    }
+}
+
+- (void)setDispatchInterval:(NSTimeInterval)dispatchInterval;
+{
+    _dispatchInterval = dispatchInterval;
+    if (self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
+    
+    if (dispatchInterval > 0) {
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:dispatchInterval target:self selector:@selector(dispatch:) userInfo:NULL repeats:YES];
     }
 }
 
@@ -119,7 +234,7 @@ NSString *const kGAUUIDKey = @"_googleAnalyticsUUID_";
 #pragma mark - System Info
 - (NSString *)screenResolution {
     NSSize size = [[[[NSScreen mainScreen] deviceDescription] valueForKey:NSDeviceSize] sizeValue];
-    return [NSString stringWithFormat:@"%fx%f", size.width, size.height];
+    return [NSString stringWithFormat:@"%ix%i", (int)size.width, (int)size.height];
 }
 
 - (NSString *)screenColors {
@@ -127,61 +242,149 @@ NSString *const kGAUUIDKey = @"_googleAnalyticsUUID_";
     return [NSString stringWithFormat:@"%lu-bit", bits];
 }
 
-- (NSString *)userLanguage { return [[NSUserDefaults standardUserDefaults] valueForKey:@"AppleLocale"]; }
+- (NSString *)userLanguage {
+    NSString *lang = [[NSLocale preferredLanguages] objectAtIndex:0];
+    NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier: [lang isEqualToString:@"en"] ? @"en_US" : lang];
+    
+    return [NSString stringWithFormat:@"%@-%@", [locale objectForKey:NSLocaleLanguageCode], [locale objectForKey:NSLocaleCountryCode]];
+}
+
+#pragma mark - Excpetion delegate
+- (BOOL)exceptionHandler:(NSExceptionHandler *)sender shouldHandleException:(NSException *)exception mask:(NSUInteger)aMask
+{
+    [self sendException:NO withNSException:exception];
+    return YES;
+}
 
 #pragma mark - Trackers
 - (BOOL)trackHit:(id<GAHit>)hitObject;
 {
-    DDLogVerbose(@"Add hit: %@", hitObject);
+    // User do not like tracking
+    if (self.optOut)
+        return NO;
     
-//    NSAssert([hitObject conformsToProtocol:@protocol(GAHit)], @"Track object have be GA Hit type");
-    if (self.hits.count < (self.queueSize * 2)) {
-        [self.hits addObject:hitObject];
-        return YES;
-    }
-    DDLogWarn(@"Queue is full. Event %@ will skipped.", hitObject);
-    return NO;
+    // Limits 
+    if (self.sessionCount > 500)
+        return NO;
+
+    [self.hits addObject:hitObject];
+    [self logString:@"Added hit: %@", hitObject];
+    return YES;
 }
 
 
 #pragma mark - Senders
-- (void)forcePush;
+- (void)dispatch;
 {
     NSAssert(self.trackingId, @"Tracking ID not specified");
-    NSDictionary *defaultParams = @{@"v" : kGAVersion, @"tid" : self.trackingId, @"cid" : self.clientId, @"an" : @(self.anonymize) };
+    NSDictionary *defaultParams = @{@"v" : kGAVersion, @"tid" : self.trackingId, @"cid" : self.clientId,
+    @"an" : @(self.anonymize),
+    @"sr" : [self screenResolution],
+    @"sd" : [self screenColors],
+    @"ul" : [self userLanguage],
+    };
     NSOrderedSet *copyHits = [self.hits copy];
     
     [copyHits enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        NSMutableDictionary *params = [defaultParams mutableCopy];
-        id<GAHit>hit = obj;
+              
+        DDLogVerbose(@"index. %@", @(idx));
         
-        if ([hit isMobile]) {
+        NSMutableDictionary *params = [defaultParams mutableCopy];
+        if ([obj isKindOfClass:[NSDictionary class]]) {
+            [params addEntriesFromDictionary:params];
             [params addEntriesFromDictionary:@{
              @"an" : [self appName],
              @"av" : [self appVersion],
              }];
+        } else {
+            id<GAHit>hit = obj;
+            
+//            if ([hit isMobile]) {
+                [params addEntriesFromDictionary:@{
+                 @"an" : [self appName],
+                 @"av" : [self appVersion],
+                 }];
+//            }
+            
+            [params addEntriesFromDictionary:[hit dictionaryRepresentation]];
         }
         
-        [params addEntriesFromDictionary:[hit dictionaryRepresentation]];
+        // Start session
+        if (idx == 0 && self.sessionChanged && self.sessionStart) {
+            [params addEntriesFromDictionary:@{ @"sc" : @"start" }];
+        }
+        
+        // Stop session
+        if (self.hits.count == 1 && (self.terminating || (self.sessionChanged && !self.sessionStart))) {
+            [params addEntriesFromDictionary:@{ @"sc" : @"stop" }];
+        }
         
         [self.httpClient postPath:@"/collect" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            DDLogInfo(@"succes post info %@", [NSString stringWithUTF8String:[(NSData *)responseObject bytes]]);
+            [self logString:@"succes post info (%@) %@", params, [NSString stringWithUTF8String:[(NSData *)responseObject bytes]]];
             [self.hits removeObject:obj];
+            self.sessionCount = self.sessionCount + 1;
+
+            if (self.hits.count == 0 && self.terminating) {
+                [NSApp replyToApplicationShouldTerminate:YES];
+            }
+
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            DDLogError(@"Fail to submit params: %@ with error %@", params, error);
+            [self logString:@"Fail to submit params: %@ with error %@", params, error];
+            // Remove from queue anyway
+            [self.hits removeObject:obj];
+
+            if (self.hits.count == 0 && self.terminating) {
+                [NSApp replyToApplicationShouldTerminate:YES];
+            }
         }];
     }];
 }
 
-- (BOOL)pushHits;
+- (BOOL)sendView:(NSString *)screen;
 {
-    // Queue size and network is available
-    if (self.hits.count >= self.queueSize && self.httpClient.networkReachabilityStatus > AFNetworkReachabilityStatusNotReachable) {
-        [self forcePush];
-        return YES;
-    }
+    return [self trackHit:[GAGeneralEvent screenViewWithName:screen]];
+}
+
+- (BOOL)sendEventWithCategory:(NSString *)category withAction:(NSString *)action withLabel:(NSString *)label withValue:(NSNumber *)value;
+{
+    return [self trackHit:[GAGeneralEvent trackAppEventWithName:label inEventCategory:category forAction:action withValue:value]];
+}
+
+- (BOOL)sendSocial:(NSString *)network withAction:(NSString *)action withTarget:(NSString *)target;
+{
+    GASocialHit *hit = [GASocialHit new];
+    hit.network = network;
+    hit.action = action;
+    hit.target = target;
     
+    return [self trackHit:hit];
+}
+
+- (BOOL)sendException:(BOOL)isFatal withDescription:(NSString *)format, ...;
+{
+    va_list args;
+	if (format)
+	{
+		va_start(args, format);
+		
+		NSString *logMsg = [[NSString alloc] initWithFormat:format arguments:args];
+		
+        return [self trackHit:[GAExceptionHit exceptionHitWithDescription:logMsg isFatal:isFatal]];
+		
+		va_end(args);
+	}
+
     return NO;
+}
+
+- (BOOL)sendException:(BOOL)isFatal withNSError:(NSError *)error
+{
+    return [self sendException:isFatal withDescription:@"error:%@:%@:%@", error.domain, @(error.code), error.localizedDescription];
+}
+
+- (BOOL)sendException:(BOOL)isFatal withNSException:(NSException *)exception
+{
+    return [self sendException:isFatal withDescription:@"exception:%@",[exception description]];
 }
 
 @end

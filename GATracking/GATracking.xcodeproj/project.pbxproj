@@ -7,20 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0765D1C716822D430086D56C /* GAEventHit.h in Headers */ = {isa = PBXBuildFile; fileRef = 0765D1C516822D430086D56C /* GAEventHit.h */; };
+		07538B4816A71EC7004905F4 /* GAExceptionHit.h in Headers */ = {isa = PBXBuildFile; fileRef = 07538B4616A71EC7004905F4 /* GAExceptionHit.h */; };
+		07538B4916A71EC7004905F4 /* GAExceptionHit.m in Sources */ = {isa = PBXBuildFile; fileRef = 07538B4716A71EC7004905F4 /* GAExceptionHit.m */; };
+		0765D1C716822D430086D56C /* GAEventHit.h in Headers */ = {isa = PBXBuildFile; fileRef = 0765D1C516822D430086D56C /* GAEventHit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0765D1C816822D430086D56C /* GAEventHit.m in Sources */ = {isa = PBXBuildFile; fileRef = 0765D1C616822D430086D56C /* GAEventHit.m */; };
-		0765D1CF16832B890086D56C /* GASocialHit.h in Headers */ = {isa = PBXBuildFile; fileRef = 0765D1CD16832B890086D56C /* GASocialHit.h */; };
+		0765D1CF16832B890086D56C /* GASocialHit.h in Headers */ = {isa = PBXBuildFile; fileRef = 0765D1CD16832B890086D56C /* GASocialHit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0765D1D016832B890086D56C /* GASocialHit.m in Sources */ = {isa = PBXBuildFile; fileRef = 0765D1CE16832B890086D56C /* GASocialHit.m */; };
 		078CE8F8169C20A500073C19 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 078CE8F7169C20A500073C19 /* SystemConfiguration.framework */; };
 		078CE919169C272400073C19 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 078CE918169C272400073C19 /* WebKit.framework */; };
-		078CE93B169C36FA00073C19 /* GAGeneralEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 078CE939169C36FA00073C19 /* GAGeneralEvent.h */; };
+		078CE93B169C36FA00073C19 /* GAGeneralEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 078CE939169C36FA00073C19 /* GAGeneralEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		078CE93C169C36FA00073C19 /* GAGeneralEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 078CE93A169C36FA00073C19 /* GAGeneralEvent.m */; };
+		078CE975169C597D00073C19 /* GAHit.h in Headers */ = {isa = PBXBuildFile; fileRef = 0765D1C316822C170086D56C /* GAHit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		078CE977169C599500073C19 /* GATracking.h in Headers */ = {isa = PBXBuildFile; fileRef = 078D4213168207D500F07F8C /* GATracking.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		078D420B168207D500F07F8C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 078D420A168207D500F07F8C /* Cocoa.framework */; };
 		078D4215168207D500F07F8C /* GATracking.m in Sources */ = {isa = PBXBuildFile; fileRef = 078D4214168207D500F07F8C /* GATracking.m */; };
-		07A20D4B1688B497003D5BA2 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 07A20D4A1688B497003D5BA2 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		07538B4616A71EC7004905F4 /* GAExceptionHit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAExceptionHit.h; sourceTree = "<group>"; };
+		07538B4716A71EC7004905F4 /* GAExceptionHit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GAExceptionHit.m; sourceTree = "<group>"; };
 		0765D1C316822C170086D56C /* GAHit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GAHit.h; sourceTree = "<group>"; };
 		0765D1C516822D430086D56C /* GAEventHit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAEventHit.h; sourceTree = "<group>"; };
 		0765D1C616822D430086D56C /* GAEventHit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GAEventHit.m; sourceTree = "<group>"; };
@@ -48,7 +53,6 @@
 			files = (
 				078CE919169C272400073C19 /* WebKit.framework in Frameworks */,
 				078CE8F8169C20A500073C19 /* SystemConfiguration.framework in Frameworks */,
-				07A20D4B1688B497003D5BA2 /* libPods.a in Frameworks */,
 				078D420B168207D500F07F8C /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -105,6 +109,8 @@
 				0765D1CE16832B890086D56C /* GASocialHit.m */,
 				078CE939169C36FA00073C19 /* GAGeneralEvent.h */,
 				078CE93A169C36FA00073C19 /* GAGeneralEvent.m */,
+				07538B4616A71EC7004905F4 /* GAExceptionHit.h */,
+				07538B4716A71EC7004905F4 /* GAExceptionHit.m */,
 				078D4213168207D500F07F8C /* GATracking.h */,
 				078D4214168207D500F07F8C /* GATracking.m */,
 				078D4211168207D500F07F8C /* Supporting Files */,
@@ -127,9 +133,12 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				078CE975169C597D00073C19 /* GAHit.h in Headers */,
 				0765D1C716822D430086D56C /* GAEventHit.h in Headers */,
 				0765D1CF16832B890086D56C /* GASocialHit.h in Headers */,
 				078CE93B169C36FA00073C19 /* GAGeneralEvent.h in Headers */,
+				078CE977169C599500073C19 /* GATracking.h in Headers */,
+				07538B4816A71EC7004905F4 /* GAExceptionHit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,6 +198,7 @@
 				0765D1C816822D430086D56C /* GAEventHit.m in Sources */,
 				0765D1D016832B890086D56C /* GASocialHit.m in Sources */,
 				078CE93C169C36FA00073C19 /* GAGeneralEvent.m in Sources */,
+				07538B4916A71EC7004905F4 /* GAExceptionHit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
