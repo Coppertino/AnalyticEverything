@@ -30,5 +30,9 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>GAInfoPlistID</key>
+	<string>UA-000000-00</string>
+	<key>GAInfoPlistIDFile</key>
+	<string>GoogleAnaliticsIDFile</string>
 </dict>
 </plist>

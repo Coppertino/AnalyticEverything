@@ -22,6 +22,7 @@
 		3DFCB8E416DE696E0006FAA6 /* GAGeneralEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DFCB8DB16DE696E0006FAA6 /* GAGeneralEvent.m */; };
 		3DFCB8E516DE696E0006FAA6 /* GASocialHit.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DFCB8DE16DE696E0006FAA6 /* GASocialHit.m */; };
 		3DFCB8E616DE696E0006FAA6 /* GATracking.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DFCB8E116DE696E0006FAA6 /* GATracking.m */; };
+		3DFCB8EA16DE8FFF0006FAA6 /* GoogleAnaliticsIDFile in Resources */ = {isa = PBXBuildFile; fileRef = 3DFCB8E916DE8FFF0006FAA6 /* GoogleAnaliticsIDFile */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,15 +30,15 @@
 		078CE928169C292100073C19 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		078CE92A169C292500073C19 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		078CE9C9169C9C5A00073C19 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = ../../../../Library/Developer/Xcode/DerivedData/Build/Products/Debug/libPods.a; sourceTree = "<group>"; };
-		078D425C1682085500F07F8C /* GoogleAnalyticsSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GoogleAnalyticsSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		078D425C1682085500F07F8C /* AnalyticEverythingSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticEverythingSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		078D42601682085500F07F8C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		078D42631682085500F07F8C /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		078D42641682085500F07F8C /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		078D42651682085500F07F8C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		078D42681682085500F07F8C /* GoogleAnalyticsSample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleAnalyticsSample-Info.plist"; sourceTree = "<group>"; };
+		078D42681682085500F07F8C /* AnalyticEverythingSample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AnalyticEverythingSample-Info.plist"; sourceTree = "<group>"; };
 		078D426A1682085500F07F8C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		078D426C1682085500F07F8C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		078D426E1682085500F07F8C /* GoogleAnalyticsSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GoogleAnalyticsSample-Prefix.pch"; sourceTree = "<group>"; };
+		078D426E1682085500F07F8C /* AnalyticEverythingSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AnalyticEverythingSample-Prefix.pch"; sourceTree = "<group>"; };
 		078D42701682085500F07F8C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		078D42721682085500F07F8C /* CPAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPAppDelegate.h; sourceTree = "<group>"; };
 		078D42731682085500F07F8C /* CPAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPAppDelegate.m; sourceTree = "<group>"; };
@@ -54,6 +55,7 @@
 		3DFCB8DF16DE696E0006FAA6 /* GATracking-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GATracking-Prefix.pch"; sourceTree = "<group>"; };
 		3DFCB8E016DE696E0006FAA6 /* GATracking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GATracking.h; sourceTree = "<group>"; };
 		3DFCB8E116DE696E0006FAA6 /* GATracking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GATracking.m; sourceTree = "<group>"; };
+		3DFCB8E916DE8FFF0006FAA6 /* GoogleAnaliticsIDFile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GoogleAnaliticsIDFile; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,7 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				3DFCB8D516DE696E0006FAA6 /* AnalyticEverything */,
-				078D42661682085500F07F8C /* GoogleAnalyticsSample */,
+				078D42661682085500F07F8C /* AnalyticEverythingSample */,
 				078D425F1682085500F07F8C /* Frameworks */,
 				078D425D1682085500F07F8C /* Products */,
 			);
@@ -85,7 +87,7 @@
 		078D425D1682085500F07F8C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				078D425C1682085500F07F8C /* GoogleAnalyticsSample.app */,
+				078D425C1682085500F07F8C /* AnalyticEverythingSample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -113,25 +115,25 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
-		078D42661682085500F07F8C /* GoogleAnalyticsSample */ = {
+		078D42661682085500F07F8C /* AnalyticEverythingSample */ = {
 			isa = PBXGroup;
 			children = (
+				3DFCB8E916DE8FFF0006FAA6 /* GoogleAnaliticsIDFile */,
 				078D42721682085500F07F8C /* CPAppDelegate.h */,
 				078D42731682085500F07F8C /* CPAppDelegate.m */,
 				078D42751682085500F07F8C /* MainMenu.xib */,
 				078D42671682085500F07F8C /* Supporting Files */,
 			);
-			name = GoogleAnalyticsSample;
 			path = AnalyticEverythingSample;
 			sourceTree = "<group>";
 		};
 		078D42671682085500F07F8C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				078D42681682085500F07F8C /* GoogleAnalyticsSample-Info.plist */,
+				078D42681682085500F07F8C /* AnalyticEverythingSample-Info.plist */,
 				078D42691682085500F07F8C /* InfoPlist.strings */,
 				078D426C1682085500F07F8C /* main.m */,
-				078D426E1682085500F07F8C /* GoogleAnalyticsSample-Prefix.pch */,
+				078D426E1682085500F07F8C /* AnalyticEverythingSample-Prefix.pch */,
 				078D426F1682085500F07F8C /* Credits.rtf */,
 			);
 			name = "Supporting Files";
@@ -174,7 +176,7 @@
 			);
 			name = AnalyticEverythingSample;
 			productName = GoogleAnalyticsSample;
-			productReference = 078D425C1682085500F07F8C /* GoogleAnalyticsSample.app */;
+			productReference = 078D425C1682085500F07F8C /* AnalyticEverythingSample.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -212,6 +214,7 @@
 				078D426B1682085500F07F8C /* InfoPlist.strings in Resources */,
 				078D42711682085500F07F8C /* Credits.rtf in Resources */,
 				078D42771682085500F07F8C /* MainMenu.xib in Resources */,
+				3DFCB8EA16DE8FFF0006FAA6 /* GoogleAnaliticsIDFile in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,12 +323,12 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "GoogleAnalyticsSample/GoogleAnalyticsSample-Prefix.pch";
+				GCC_PREFIX_HEADER = "AnalyticEverythingSample/AnalyticEverythingSample-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../Pods/Headers/**",
 					"$(SRCROOT)/../GATracking/GATracking",
 				);
-				INFOPLIST_FILE = "GoogleAnalyticsSample/GoogleAnalyticsSample-Info.plist";
+				INFOPLIST_FILE = "AnalyticEverythingSample/AnalyticEverythingSample-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/Build/Products/Debug\"",
@@ -340,12 +343,12 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "GoogleAnalyticsSample/GoogleAnalyticsSample-Prefix.pch";
+				GCC_PREFIX_HEADER = "AnalyticEverythingSample/AnalyticEverythingSample-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../Pods/Headers/**",
 					"$(SRCROOT)/../GATracking/GATracking",
 				);
-				INFOPLIST_FILE = "GoogleAnalyticsSample/GoogleAnalyticsSample-Info.plist";
+				INFOPLIST_FILE = "AnalyticEverythingSample/AnalyticEverythingSample-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/Build/Products/Debug\"",

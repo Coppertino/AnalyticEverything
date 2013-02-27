@@ -27,6 +27,8 @@ NSString *const kGASecureReceiverURLString = @"https://ssl.google-analytics.com/
 NSString *const kGAUUIDKey = @"_googleAnalyticsUUID_";
 NSString *const kGASavedHitsKey = @"_googleAnalyticsOLDHits_";
 
+
+
 @interface GATracking (/*Private*/)
 @property (nonatomic) NSMutableArray *hits;
 @property (nonatomic) AFHTTPClient *httpClient;
@@ -43,8 +45,33 @@ NSString *const kGASavedHitsKey = @"_googleAnalyticsOLDHits_";
     static GATracking *_sharedTracker = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _sharedTracker = [GATracking trackerWithID:kGATrackerID];
+        NSString *googleID = nil;
+        NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
+        NSString *key = [infoDict objectForKey:GA_INFO_PLIST_ID_FILE_KEY];
+        if (key)
+        {
+            NSString *filePath = [[NSBundle mainBundle] pathForResource:key
+                                                                 ofType:nil];
+            NSData *data = [NSData dataWithContentsOfFile:filePath];
+            
+            if (data)
+            {
+                googleID = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            }
+        }
         
+        if (!googleID)
+        {
+            googleID = [infoDict objectForKey:GA_INFO_PLIST_ID_KEY];
+        }
+        
+        if (!googleID || [googleID isEqualToString:@""])
+        {
+            NSLog(@"Couldn't find id file");
+        } else {
+            NSLog(@"Found id: %@",googleID);
+            _sharedTracker = [GATracking trackerWithID:googleID];
+        }
     });
     
     return _sharedTracker;
@@ -146,7 +173,7 @@ NSString *const kGASavedHitsKey = @"_googleAnalyticsOLDHits_";
 		va_start(args, format);
 		
 		NSString *logMsg = [[NSString alloc] initWithFormat:format arguments:args];
-		DDLogInfo(logMsg);
+		DDLogInfo(@"%@",logMsg);
 		
 		va_end(args);
 	}

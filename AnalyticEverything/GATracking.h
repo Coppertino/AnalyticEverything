@@ -7,7 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#define kGATrackerID @"UA-523507-58"
+
+// Plist keys to indicate ID storage
+#define GA_INFO_PLIST_ID_FILE_KEY   @"GAInfoPlistIDFile"
+#define GA_INFO_PLIST_ID_KEY        @"GAInfoPlistID"
 
 @protocol GAHit;
 
@@ -27,10 +30,12 @@ typedef NS_ENUM(NSInteger, GAErrorCode) {
     kGANetworkError,       // This error code indicates that there was a network-related error.
 };
 
+
 /*!
  Google Analytics top-level class. Provides facilities to create trackers and set behaviorial flags.
  */
 @interface GATracking : NSObject
+
 /*!
  The tracking identifier (the string that begins with "UA-") this tracker is
  associated with.
