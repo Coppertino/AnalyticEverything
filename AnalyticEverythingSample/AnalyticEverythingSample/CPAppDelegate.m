@@ -11,13 +11,15 @@
 
 #import "GATracking.h"
 #import "GAGeneralEvent.h"
+#import "GATransactionEventHit.h"
 
 @implementation CPAppDelegate
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     // Insert code here to initialize your application
-//    GATracking *tracking = [GATracking trackerWithID:@"UA-000000-XX"]; /// <---------- YOUR ID here
-    GATracking *tracking = [GATracking sharedTracker];
+    GATracking *tracking = [GATracking trackerWithID:@"UA-523507-58"]; /// <---------- YOUR ID here
+    tracking.debug = YES;
+//    GATracking *tracking = [GATracking sharedTracker];
     [tracking sendView:@"MainView"];
     [tracking sendEventWithCategory:@"States" withAction:@"Load" withLabel:@"Screen load" withValue:@(100)];
     
@@ -26,6 +28,11 @@
     [[self.window.contentView layer] setBackgroundColor:[[NSColor selectedMenuItemColor] CGColor]];
     
     
+    GATransactionEventHit *trx = [GATransactionEventHit transactionWithID:@"000001" forCurrency:@"USD"];
+    [trx addItem:[GAItemHit itemWithName:@"TEST" andSKU:@"com.coppertino.TestItem" andPrice:@0.99 forCurrency:@"USD"]];
+    [tracking trackHit:trx];
+    
+    [tracking dispatch];
 }
 
 @end

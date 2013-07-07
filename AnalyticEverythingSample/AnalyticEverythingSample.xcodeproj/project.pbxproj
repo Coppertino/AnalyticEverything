@@ -23,6 +23,9 @@
 		3DFCB8E516DE696E0006FAA6 /* GASocialHit.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DFCB8DE16DE696E0006FAA6 /* GASocialHit.m */; };
 		3DFCB8E616DE696E0006FAA6 /* GATracking.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DFCB8E116DE696E0006FAA6 /* GATracking.m */; };
 		3DFCB8EA16DE8FFF0006FAA6 /* GoogleAnaliticsIDFile in Resources */ = {isa = PBXBuildFile; fileRef = 3DFCB8E916DE8FFF0006FAA6 /* GoogleAnaliticsIDFile */; };
+		52AF1DED1789C3BD00416207 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52AF1DEC1789C3BD00416207 /* Security.framework */; };
+		52AF1DF01789C48C00416207 /* GATransactionEventHit.m in Sources */ = {isa = PBXBuildFile; fileRef = 52AF1DEF1789C3D700416207 /* GATransactionEventHit.m */; };
+		52AF1DF31789C5A800416207 /* GAItemHit.m in Sources */ = {isa = PBXBuildFile; fileRef = 52AF1DF21789C58E00416207 /* GAItemHit.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +59,11 @@
 		3DFCB8E016DE696E0006FAA6 /* GATracking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GATracking.h; sourceTree = "<group>"; };
 		3DFCB8E116DE696E0006FAA6 /* GATracking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GATracking.m; sourceTree = "<group>"; };
 		3DFCB8E916DE8FFF0006FAA6 /* GoogleAnaliticsIDFile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GoogleAnaliticsIDFile; sourceTree = "<group>"; };
+		52AF1DEC1789C3BD00416207 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		52AF1DEE1789C3D700416207 /* GATransactionEventHit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GATransactionEventHit.h; sourceTree = "<group>"; };
+		52AF1DEF1789C3D700416207 /* GATransactionEventHit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GATransactionEventHit.m; sourceTree = "<group>"; };
+		52AF1DF11789C58E00416207 /* GAItemHit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GAItemHit.h; sourceTree = "<group>"; };
+		52AF1DF21789C58E00416207 /* GAItemHit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GAItemHit.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52AF1DED1789C3BD00416207 /* Security.framework in Frameworks */,
 				07538B5616A72079004905F4 /* ExceptionHandling.framework in Frameworks */,
 				078CE9CA169C9C5A00073C19 /* libPods.a in Frameworks */,
 				078D42611682085500F07F8C /* Cocoa.framework in Frameworks */,
@@ -95,6 +104,7 @@
 		078D425F1682085500F07F8C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				52AF1DEC1789C3BD00416207 /* Security.framework */,
 				078CE9C9169C9C5A00073C19 /* libPods.a */,
 				078D42601682085500F07F8C /* Cocoa.framework */,
 				07538B5516A72079004905F4 /* ExceptionHandling.framework */,
@@ -154,6 +164,10 @@
 				3DFCB8DF16DE696E0006FAA6 /* GATracking-Prefix.pch */,
 				3DFCB8E016DE696E0006FAA6 /* GATracking.h */,
 				3DFCB8E116DE696E0006FAA6 /* GATracking.m */,
+				52AF1DEE1789C3D700416207 /* GATransactionEventHit.h */,
+				52AF1DEF1789C3D700416207 /* GATransactionEventHit.m */,
+				52AF1DF11789C58E00416207 /* GAItemHit.h */,
+				52AF1DF21789C58E00416207 /* GAItemHit.m */,
 			);
 			name = AnalyticEverything;
 			path = ../AnalyticEverything;
@@ -227,11 +241,13 @@
 			files = (
 				078D426D1682085500F07F8C /* main.m in Sources */,
 				078D42741682085500F07F8C /* CPAppDelegate.m in Sources */,
+				52AF1DF31789C5A800416207 /* GAItemHit.m in Sources */,
 				3DFCB8E216DE696E0006FAA6 /* GAEventHit.m in Sources */,
 				3DFCB8E316DE696E0006FAA6 /* GAExceptionHit.m in Sources */,
 				3DFCB8E416DE696E0006FAA6 /* GAGeneralEvent.m in Sources */,
 				3DFCB8E516DE696E0006FAA6 /* GASocialHit.m in Sources */,
 				3DFCB8E616DE696E0006FAA6 /* GATracking.m in Sources */,
+				52AF1DF01789C48C00416207 /* GATransactionEventHit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,10 +345,7 @@
 					"$(SRCROOT)/../GATracking/GATracking",
 				);
 				INFOPLIST_FILE = "AnalyticEverythingSample/AnalyticEverythingSample-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/Build/Products/Debug\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -349,10 +362,7 @@
 					"$(SRCROOT)/../GATracking/GATracking",
 				);
 				INFOPLIST_FILE = "AnalyticEverythingSample/AnalyticEverythingSample-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/Build/Products/Debug\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

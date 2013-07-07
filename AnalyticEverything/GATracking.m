@@ -11,6 +11,7 @@
 #import "GAGeneralEvent.h"
 #import "GASocialHit.h"
 #import "GAExceptionHit.h"
+#import "GATransactionEventHit.h"
 #import <ExceptionHandling/ExceptionHandling.h>
 
 // Pods
@@ -295,6 +296,13 @@ NSString *const kGASavedHitsKey = @"_googleAnalyticsOLDHits_";
         return NO;
 
     [self.hits addObject:hitObject];
+    if ([hitObject hitType] == GATransaction) {
+        GATransactionEventHit *trx = (GATransactionEventHit *)hitObject;
+        [[trx items] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [self.hits addObject:obj];
+        }];
+    }
+    
     [self logString:@"Added hit: %@", hitObject];
     return YES;
 }
