@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GATracking-Prefix.pch"
 
 typedef NS_ENUM(NSInteger, GAHitType) {
     GAPageView,
