@@ -15,11 +15,10 @@
 #import <ExceptionHandling/ExceptionHandling.h>
 
 // Pods
-#import <AFNetworking/AFHTTPClient.h>
+#import <AFNetworking/AFNetworking.h>
 #import <CocoaLumberjack/DDTTYLogger.h>
 #import <CocoaLumberjack/DDASLLogger.h>
 #import <libextobjc/extobjc.h>
-
 
 NSString *const kGAVersion = @"1";
 NSString *const kGAErrorDomain = @"com.google-analytics.errorDomain";
@@ -32,7 +31,7 @@ NSString *const kGASavedHitsKey = @"_googleAnalyticsOLDHits_";
 
 @interface GATracking (/*Private*/)
 @property (nonatomic) NSMutableArray *hits;
-@property (nonatomic) AFHTTPClient *httpClient;
+@property (nonatomic) AFHTTPRequestOperationManager *httpManager;
 @property (nonatomic) NSTimer *timer;
 @property (nonatomic, copy, readwrite)  NSString *trackingId;
 @property (nonatomic) NSUInteger sessionCount;
@@ -101,7 +100,7 @@ NSString *const kGASavedHitsKey = @"_googleAnalyticsOLDHits_";
     self = [super init];
     if (self) {
         self.hits = [NSMutableArray array];
-        self.httpClient = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:kGAReceiverURLString]];
+        self.httpManager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL: [NSURL URLWithString:kGAReceiverURLString]];
         self.dispatchInterval = 120;
         
 #ifdef DEBUG
@@ -192,23 +191,25 @@ NSString *const kGASavedHitsKey = @"_googleAnalyticsOLDHits_";
 {
     if (useHttps != _useHttps) {
         _useHttps = useHttps;
-        self.httpClient = [AFHTTPClient clientWithBaseURL:
+        self.httpManager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:
                            [NSURL URLWithString:(_useHttps ? kGASecureReceiverURLString : kGAReceiverURLString)]];
     }
 }
 
-- (void)setHttpClient:(AFHTTPClient *)httpClient
+- (void)setHttpManager:(AFHTTPRequestOperationManager *)httpManager
 {
-    _httpClient = httpClient;
-    if (_httpClient) {
+    _httpManager = httpManager;
+    if (_httpManager) {
         NSDictionary *osInfo = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
         
         NSLocale *currentLocale = [NSLocale autoupdatingCurrentLocale];
         NSString *UA = [NSString stringWithFormat:@"GoogleAnalytics/2.0 (Macintosh; Intel %@ %@; %@-%@)",
                         osInfo[@"ProductName"], [osInfo[@"ProductVersion"] stringByReplacingOccurrencesOfString:@"." withString:@"_"],
                         [currentLocale objectForKey:NSLocaleLanguageCode], [currentLocale objectForKey:NSLocaleCountryCode]];
-        
-        [_httpClient setDefaultHeader:@"User-Agent" value:UA];
+
+        httpManager.responseSerializer = [AFHTTPResponseSerializer serializer];
+        [httpManager.requestSerializer setValue: UA
+                            forHTTPHeaderField: @"User-Agent"];
     }
 }
 
@@ -353,8 +354,10 @@ NSString *const kGASavedHitsKey = @"_googleAnalyticsOLDHits_";
         if (self.hits.count == 1 && (self.terminating || (self.sessionChanged && !self.sessionStart))) {
             [params addEntriesFromDictionary:@{ @"sc" : @"stop" }];
         }
-        
-        [self.httpClient postPath:@"/collect" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+
+        [self.httpManager POST: @"/collect"
+                   parameters: params
+                      success: ^(AFHTTPRequestOperation *operation, id responseObject) {
             [self logString:@"succes post info (%@) %@", params, [NSString stringWithUTF8String:[(NSData *)responseObject bytes]]];
             [self.hits removeObject:obj];
             self.sessionCount = self.sessionCount + 1;
